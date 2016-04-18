@@ -10,5 +10,5 @@ RUN cd; yum install cmake gsl-devel -y; wget http://downloads.sourceforge.net/pr
 RUN cd /root/ecell4; BOOST_INCLUDEDIR=/root/boost_1_59_0 cmake .; CPATH=/root/boost_1_59_0 make BesselTables
 
 # E-Cell4 wheels
-RUN LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp35-cp35m/bin/python /root/ecell4/python/setup.py bdist_wheel
-RUN LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp34-cp34m/bin/python /root/ecell4/python/setup.py bdist_wheel
+RUN cd /root/ecell4/python; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp35-cp35m/bin/python setup.py bdist_wheel
+RUN cd /root/ecell4/python; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp34-cp34m/bin/python setup.py bdist_wheel
