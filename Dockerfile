@@ -12,3 +12,8 @@ RUN cd /root/ecell4; BOOST_INCLUDEDIR=/root/boost_1_59_0 cmake .; CPATH=/root/bo
 # E-Cell4 wheels
 RUN cd /root/ecell4/python; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp35-cp35m/bin/python setup.py bdist_wheel
 RUN cd /root/ecell4/python; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp34-cp34m/bin/python setup.py bdist_wheel
+
+# https://github.com/pypa/auditwheel/pull/31/files
+RUN sed -ie 's/libname/soname/g' /opt/_internal/cpython-3.5.1/lib/python3.5/site-packages/auditwheel/repair.py
+RUN cp cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libhdf5.so.9 /lib64/; cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libhdf5_cpp.so.9 /lib64/; cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libsz.so.2 /lib64/
+RUN auditwheel repair /root/ecell4/python/dist/ecell-4.0.0-cp35-cp35m-linux_x86_64.whl; auditwheel repair /root/ecell4/python/dist/ecell-4.0.0-cp34-cp34m-linux_x86_64.whl
