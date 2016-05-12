@@ -1,6 +1,6 @@
 FROM quay.io/pypa/manylinux1_x86_64
 
-RUN cd; yum update -y; git clone git://github.com/ecell/ecell4
+RUN cd; yum update -y; git clone -b 'v4.0.1' --single-branch git://github.com/ecell/ecell4
 # Cython
 RUN /opt/python/cp35-cp35m/bin/python -m pip install cython
 RUN /opt/python/cp34-cp34m/bin/python -m pip install cython
