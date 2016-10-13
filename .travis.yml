@@ -2,14 +2,20 @@ sudo: required
 services:
   - docker
 
-before_install:
-- docker pull quay.io/pypa/manylinux1_x86_64
-- docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd; yum update -y; git clone git://github.com/ecell/ecell4; /opt/python/cp27-cp27mu/bin/python -m pip install cython; /opt/python/cp35-cp35m/bin/python -m pip install cython; /opt/python/cp34-cp34m/bin/python -m pip install cython; yum install cmake gsl-devel -y; wget http://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/bin/linux-centos5-x86_64-gcc482/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz; tar xf hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz; tar xf boost_1_59_0.tar.gz; cd /root/ecell4; BOOST_INCLUDEDIR=/root/boost_1_59_0 cmake .; cd /root/ecell4/python; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp27-cp27mu/bin/python setup.py bdist_wheel; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp35-cp35m/bin/python setup.py bdist_wheel; LIBRARY_PATH=/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include /opt/python/cp34-cp34m/bin/python setup.py bdist_wheel; cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libhdf5.so.9 /lib64/; cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libhdf5_cpp.so.9 /lib64/; cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/libsz.so.2 /lib64/; auditwheel repair /root/ecell4/python/dist/ecell-4.0.4-cp35-cp35m-linux_x86_64.whl; auditwheel repair /root/ecell4/python/dist/ecell-4.0.4-cp34-cp34m-linux_x86_64.whl; auditwheel repair /root/ecell4/python/dist/ecell-4.0.4-cp27-cp27mu-linux_x86_64.whl"
-- docker cp aaa:/root/ecell4/python/wheelhouse/ecell-4.0.4-cp27-cp27mu-manylinux1_x86_64.whl ./
-- docker cp aaa:/root/ecell4/python/wheelhouse/ecell-4.0.4-cp34-cp34m-manylinux1_x86_64.whl ./
-- docker cp aaa:/root/ecell4/python/wheelhouse/ecell-4.0.4-cp35-cp35m-manylinux1_x86_64.whl ./
+env:
+- IMAGE="quay.io/pypa/manylinux1_x86_64"
+- CONTAINER="aaa"
+- VERSION=4.0.4
+
+install:
+- docker pull ${IMAGE}
+- docker run -v `pwd`/scripts:/root/scripts/ro -w /root --name ${CONTAINER} ${IMAGE} ./scripts/install.sh
 
 script:
+- docker exec ${CONTAINER} ./scripts/build.sh
+- docker cp ${CONTAINER}:/root/ecell4/python/wheelhouse/ecell-${VERSION}-cp27-cp27mu-manylinux1_x86_64.whl ./
+- docker cp ${CONTAINER}:/root/ecell4/python/wheelhouse/ecell-${VERSION}-cp34-cp34m-manylinux1_x86_64.whl ./
+- docker cp ${CONTAINER}:/root/ecell4/python/wheelhouse/ecell-${VERSION}-cp35-cp35m-manylinux1_x86_64.whl ./
 - pwd
 - ls -lh
 
@@ -18,9 +24,9 @@ deploy:
   api_key:
     secure: dSmokM/OSM47xxD1ZcrTzbx76XUcQvAY6j/E+tGhONJ2OskHOhqm4RCT/Jct+mE3lUmEEswr9barsfSrn//SziKfi0gjvEGoXJCe5GIcF+ugUiITcHjS8cDDeKTf5FjIs+Cw65aqhJN/SODBbg3qfIdxyPxKNX85IbpOzSNayawglYgTlvRk3W/ZKA+hIBcSXTyfPnV/dmxY9y1wihOKdSoh+YyCQbaG2W6juVmvYL78tk7CP8MDLvbZ6nWf2CptmSK46Ydeb7nVESbLtTP6RrwEIjgNh5cnMb8/wymnOLjBiLDwfmafp565jKVhMP1vd+Vkm/tbNzuYrj6kFzCgi+gwEDwS38Tnv2IxCup7QPMNv2d09Co4EUFQSgZHPQ4ZEbST3L0eLrnBJbylya+qz4H4rH5iD1XFQKEa6W62zA3gaWVUIHsy0ywUbGiPTrGDWcV46oy8KnbENvpHJyc5wBP2SMmAcMpiYcckYg9bPxtd8UCC+aK/xCgN6PGWPhYKxyNFh0+wKsXRpitBk4UR86yj+VlqXvb2TSGZl15sOxL4QEC5v+gvVnhsgMfNmfpg6ROXqJ2UPB7bdjoow+yypfH45VCip/cBtbhCQSxEOXhxuo9up+AvzjVXt/TbeEFL7k+c4Dx6USzDn53n9+2GSamr3rjCFleJILxqr2zjpe0=
   file:
-    - "ecell-4.0.4-cp27-cp27mu-manylinux1_x86_64.whl"
-    - "ecell-4.0.4-cp34-cp34m-manylinux1_x86_64.whl"
-    - "ecell-4.0.4-cp35-cp35m-manylinux1_x86_64.whl"
+    - "ecell-${VERSION}-cp27-cp27mu-manylinux1_x86_64.whl"
+    - "ecell-${VERSION}-cp34-cp34m-manylinux1_x86_64.whl"
+    - "ecell-${VERSION}-cp35-cp35m-manylinux1_x86_64.whl"
   skip_cleanup: true
   overwrite: true
   on:
