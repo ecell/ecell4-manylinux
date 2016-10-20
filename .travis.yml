@@ -1,4 +1,5 @@
 sudo: required
+language: python
 services:
   - docker
 
@@ -8,9 +9,13 @@ env:
     - CONTAINER="build"
     - VERSION="4.0.4"
   matrix:
-    - PYVERSION="cp27-cp27mu"
-    - PYVERSION="cp34-cp34m"
-    - PYVERSION="cp35-cp35m"
+    include:
+      - python: "2.7"
+        env: PYVERSION="cp27-cp27mu"
+      - python: "3.4"
+        env: PYVERSION="cp34-cp34m"
+      - python: "3.5"
+        env: PYVERSION="cp35-cp35m"
 
 install:
   - docker build --build-arg PYVERSION=${PYVERSION} -t ${TAG} .
@@ -18,7 +23,8 @@ install:
 script:
   - docker create --name ${CONTAINER} ${TAG} /bin/sh
   - docker cp ${CONTAINER}:/root/ecell4/wheelhouse/ecell-${VERSION}-${PYVERSION}-manylinux1_x86_64.whl ./
-  - docker run --rm -v `pwd`:/root/whl:ro quay.io/pypa/manylinux1_x86_64 "/opt/python/${PYVERSION}/bin/python -m pip install /root/whl/ecell-${VERSION}-${PYVERSION}-manylinux1_x86_64.whl && /opt/python/${PYVERSION}/bin/python - c 'import ecell4'"
+  - pip install ecell-${VERSION}-${PYVERSION}-manylinux1_x86_64.whl
+  - python -c "import ecell4"
 
 deploy:
   provider: releases
