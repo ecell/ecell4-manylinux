@@ -8,14 +8,15 @@ env:
     - TAG="ecell4-manylinux"
     - CONTAINER="build"
     - VERSION="4.0.4"
-  matrix:
-    include:
-      - python: "2.7"
-        env: PYVERSION="cp27-cp27mu"
-      - python: "3.4"
-        env: PYVERSION="cp34-cp34m"
-      - python: "3.5"
-        env: PYVERSION="cp35-cp35m"
+
+matrix:
+  include:
+    - python: "2.7"
+      env: PYVERSION="cp27-cp27mu"
+    - python: "3.4"
+      env: PYVERSION="cp34-cp34m"
+    - python: "3.5"
+      env: PYVERSION="cp35-cp35m"
 
 install:
   - docker build --build-arg PYVERSION=${PYVERSION} -t ${TAG} .
