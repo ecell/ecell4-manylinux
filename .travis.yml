@@ -8,9 +8,9 @@ env:
     - CONTAINER="build"
     - VERSION="4.0.4"
   matrix:
-    - env: PYVERSION="cp27-cp27mu"
-    - env: PYVERSION="cp34-cp34m"
-    - env: PYVERSION="cp35-cp35m"
+    - PYVERSION="cp27-cp27mu"
+    - PYVERSION="cp34-cp34m"
+    - PYVERSION="cp35-cp35m"
 
 install:
   - docker build --build-arg PYVERSION=${PYVERSION} -t ${TAG} .
