@@ -18,7 +18,7 @@ install:
 script:
   - docker create --name ${CONTAINER} ${TAG} /bin/sh
   - docker cp ${CONTAINER}:/root/ecell4/wheelhouse/ecell-${VERSION}-${PYVERSION}-manylinux1_x86_64.whl ./
-  - docker run --rm -e "PYVERSION=${PYVERSION}" -e "VERSION=${VERSION}" -v `pwd`:/root/mnt:ro -w /root/mnt quay.io/pypa/manylinux1_x86_64 ./test.sh
+  - docker run --rm -t -e "PYVERSION=${PYVERSION}" -e "VERSION=${VERSION}" -v `pwd`:/root/mnt:ro -w /root/mnt quay.io/pypa/manylinux1_x86_64 ./test.sh
 
 deploy:
   provider: releases
