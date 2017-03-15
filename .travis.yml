@@ -4,10 +4,11 @@ services:
 
 env:
   global:
-    - VERSION="4.0.8"
+    - VERSION="4.1.0"
     - PY27="cp27-cp27mu"
     - PY34="cp34-cp34m"
     - PY35="cp35-cp35m"
+    - PY36="cp36-cp36m"
 
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
@@ -16,6 +17,7 @@ before_install:
   /opt/python/${PY27}/bin/python -m pip install cython &&
   /opt/python/${PY34}/bin/python -m pip install cython &&
   /opt/python/${PY35}/bin/python -m pip install cython &&
+  /opt/python/${PY36}/bin/python -m pip install cython &&
   yum install cmake gsl-devel -y &&
   wget http://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz &&
   curl -L https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/bin/linux-centos5-x86_64-gcc482/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz -o hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz &&
@@ -28,10 +30,13 @@ before_install:
   cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PY34}/bin/python . &&
   make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PY34}-linux_x86_64.whl && rm -f CMakeCache.txt &&
   cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PY35}/bin/python . &&
-  make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PY35}-linux_x86_64.whl"
+  make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PY35}-linux_x86_64.whl && rm -f CMakeCache.txt &&
+  cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PY36}/bin/python . &&
+  make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PY36}-linux_x86_64.whl"
 - docker cp aaa:/root/ecell4/wheelhouse/ecell-${VERSION}-${PY27}-manylinux1_x86_64.whl ./
 - docker cp aaa:/root/ecell4/wheelhouse/ecell-${VERSION}-${PY34}-manylinux1_x86_64.whl ./
 - docker cp aaa:/root/ecell4/wheelhouse/ecell-${VERSION}-${PY35}-manylinux1_x86_64.whl ./
+- docker cp aaa:/root/ecell4/wheelhouse/ecell-${VERSION}-${PY36}-manylinux1_x86_64.whl ./
 
 script:
 - pwd && ls -lh
@@ -44,6 +49,7 @@ deploy:
     - "ecell-${VERSION}-${PY27}-manylinux1_x86_64.whl"
     - "ecell-${VERSION}-${PY34}-manylinux1_x86_64.whl"
     - "ecell-${VERSION}-${PY35}-manylinux1_x86_64.whl"
+    - "ecell-${VERSION}-${PY36}-manylinux1_x86_64.whl"
   skip_cleanup: true
   overwrite: true
   on:
