@@ -12,7 +12,6 @@ env:
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
 - docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd && yum update -y &&
-  #git clone -b v${VERSION} git://github.com/ecell/ecell4 &&
   git clone git://github.com/ecell/ecell4 &&
   /opt/python/${PY27}/bin/python -m pip install cython &&
   /opt/python/${PY35}/bin/python -m pip install cython &&
