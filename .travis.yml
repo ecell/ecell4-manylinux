@@ -18,11 +18,10 @@ before_install:
   /opt/python/${PY36}/bin/python -m pip install cython &&
   yum install cmake gsl-devel -y &&
   wget http://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz &&
-  curl -L https://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/bin/linux-centos5-x86_64-gcc482/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz -o hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz &&
-  tar xf hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared.tar.gz && tar xf boost_1_59_0.tar.gz &&
+  wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.17/src/hdf5-1.8.17.tar.bz2 &&
+  tar xf hdf5-1.8.17.tar.bz2 && tar xf boost_1_59_0.tar.gz &&
+  cd hdf5-1.8.17 && ./configure --prefix=/usr/local --enable-cxx && make && make install &&
   cd /root/ecell4 && export BOOST_INCLUDEDIR=/root/boost_1_59_0 &&
-  cp /root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/lib/* /usr/local/lib64/ &&
-  export CPATH=/root/boost_1_59_0:/root/hdf5-1.8.14-linux-centos5-x86_64-gcc482-shared/include &&
   cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PY27}/bin/python . &&
   make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PY27}-linux_x86_64.whl && rm -f CMakeCache.txt &&
   cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PY35}/bin/python . &&
