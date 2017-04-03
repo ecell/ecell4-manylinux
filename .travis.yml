@@ -4,7 +4,7 @@ services:
 
 env:
   global:
-    - VERSION="4.1.0"
+    - VERSION="4.1.1"
     - PY27="cp27-cp27mu"
     - PY35="cp35-cp35m"
     - PY36="cp36-cp36m"
@@ -12,7 +12,7 @@ env:
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
 - docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd && yum update -y &&
-  git clone git://github.com/ecell/ecell4 &&
+  git clone -b 'v4.1.1' --single-branch --depth 1 git://github.com/ecell/ecell4 &&
   /opt/python/${PY27}/bin/python -m pip install cython &&
   /opt/python/${PY35}/bin/python -m pip install cython &&
   /opt/python/${PY36}/bin/python -m pip install cython &&
