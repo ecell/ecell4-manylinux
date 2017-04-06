@@ -2,10 +2,10 @@ sudo: required
 services:
   - docker
 
+language: generic
 env:
   global:
     - VERSION="4.1.1"
-  language: generic
   matrix:
     - PYVER="cp36-cp36m"
     - PYVER="cp35-cp35m"
