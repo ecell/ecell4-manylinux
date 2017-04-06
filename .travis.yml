@@ -7,7 +7,7 @@ env:
     - VERSION="4.1.1"
     - PY27="cp27-cp27mu"
     - PY35="cp35-cp35m"
-    - PY36="cp35-cp36m"
+    - PY36="cp36-cp36m"
 
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
