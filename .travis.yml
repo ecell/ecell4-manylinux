@@ -9,20 +9,17 @@ env:
   matrix:
     - PYVER="cp36-cp36m"
     - PYVER="cp35-cp35m"
+    - PYVER="cp27-cp27mu"
 
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
-- docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd &&
+- docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd && yum install cmake gsl-devel -y &&
   git clone -b v${VERSION} --single-branch --depth 1 git://github.com/ecell/ecell4 &&
   /opt/python/${PYVER}/bin/python -m pip install cython &&
-  curl -O https://cmake.org/files/v3.7/cmake-3.7.2.tar.gz &&
-  wget ftp://ftp.gnu.org/gnu/gsl/gsl-2.3.tar.gz &&
   wget http://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz &&
   wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.17/src/hdf5-1.8.17.tar.bz2 &&
-  tar xf cmake-3.7.2.tar.gz && tar xf gsl-2.3.tar.gz && tar xf hdf5-1.8.17.tar.bz2 && tar xf boost_1_59_0.tar.gz &&
-  cd cmake-3.7.2 && ./configure && make && make install &&
-  cd ../gsl-2.3 && ./configure && make && make install &&
-  cd ../hdf5-1.8.17 && ./configure --prefix=/usr/local --enable-cxx && make && make install &&
+  tar xf hdf5-1.8.17.tar.bz2 && tar xf boost_1_59_0.tar.gz &&
+  cd hdf5-1.8.17 && ./configure --prefix=/usr/local --enable-cxx && make && make install &&
   cd /root/ecell4 && export BOOST_INCLUDEDIR=/root/boost_1_59_0 &&
   cmake -DNO_SHARED:BOOL=1 -DPYTHON_EXECUTABLE:FILEPATH=/opt/python/${PYVER}/bin/python . &&
   make && auditwheel repair /root/ecell4/python/dist/ecell-${VERSION}-${PYVER}-linux_x86_64.whl && rm -f CMakeCache.txt"
