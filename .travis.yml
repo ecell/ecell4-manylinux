@@ -5,7 +5,7 @@ services:
 language: generic
 env:
   global:
-    - VERSION="4.1.1"
+    - VERSION="4.1.2"
   matrix:
     - PYVER="cp36-cp36m"
     - PYVER="cp35-cp35m"
