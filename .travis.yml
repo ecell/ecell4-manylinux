@@ -14,7 +14,7 @@ env:
 before_install:
 - docker pull quay.io/pypa/manylinux1_x86_64
 - docker run --name "aaa" quay.io/pypa/manylinux1_x86_64 /bin/sh -c "cd && yum install cmake gsl-devel -y &&
-  git clone -b v${VERSION} --single-branch --depth 1 git://github.com/ecell/ecell4 &&
+  git clone -b greens_functions --single-branch --depth 1 git://github.com/kaizu/ecell4 &&
   /opt/python/${PYVER}/bin/python -m pip install cython &&
   wget http://downloads.sourceforge.net/project/boost/boost/1.59.0/boost_1_59_0.tar.gz &&
   wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.17/src/hdf5-1.8.17.tar.bz2 &&
