@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: quay.io/pypa/manylinux1_x86_64
       
-    working_directory: /tmp
+    working_directory: ~/app
     steps:
       - checkout
       - run: cd &&
